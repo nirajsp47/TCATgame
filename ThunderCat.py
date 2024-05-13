@@ -3,7 +3,7 @@ import pygame as pyg
 import numpy as numpy
 import time
 import random
-import keras
+#import keras
 
 done = False
 x = 100
@@ -48,8 +48,8 @@ class ball ():
   dir = random.randint(0,1)
   sign = random.randint(-2,2)
   angle = random.randint(0,300)
-  axes_control = random.randint(-4,4)  ##Find somethingwhich will either take 3.5 or -3.5 nothing in between
-  boob = 0
+  axes_control = random.randint(-5,5)  ##Find somethingwhich will either take 3.5 or -3.5 nothing in between
+  box = 0
   player_stick = 0
   pos_x = 0
   pos_y = 0
@@ -62,7 +62,7 @@ class ball ():
      self.screen = screen
      self.ball_height = ball_height
      self.ball_width = ball_width
-     print "heloo" 
+     print("heloo") 
  
 
   def move(self):
@@ -75,10 +75,10 @@ class ball ():
      '''self.q = self.q - 3.5'''
      #for  checking the collision with boundaries, we might have to use only one variable on x - axis like angle
      '''print self.q'''
-     print self.t     
-     print self.angle
-     boob = pyg.draw.rect(self.screen,(255,255,255), [self.t,self.angle,ball_width,ball_height])
-     return boob
+     print(self.t)
+     print(self.angle)
+     box = pyg.draw.rect(self.screen,(255,255,255), [self.t,self.angle,ball_width,ball_height])
+     return box
      
      #print self.player_stick.gg
 
@@ -91,7 +91,7 @@ class ball ():
 
     if ((self.angle >= 590 or self.angle <=10 )):
        #self.axes_control = -self.axes_control 
-       print "hit on top - bottom"
+       print("hit on top - bottom")
        self.sign = -self.sign
      
     '''
@@ -108,13 +108,13 @@ class ball ():
      pass
 
 
-  def collision_with_player(self,boob,player_rect_1,player_rect_2, pos_x, pos_y):
-     if (boob.colliderect(player_rect_2)):
-        print "ITCOLLIDED!!!!!!!!!"
+  def collision_with_player(self,box,player_rect_1,player_rect_2, pos_x, pos_y):
+     if (box.colliderect(player_rect_2)):
+        print("ITCOLLIDED!!!!!!!!!")
         self.axes_control = -self.axes_control
         self.sign  = -self.sign
-     if (boob.colliderect(player_rect_1)):
-        print "ITCOLLIDED!!!!!!!!!"
+     if (box.colliderect(player_rect_1)):
+        print("ITCOLLIDED!!!!!!!!!")
         self.axes_control = -self.axes_control
         self.sign = -self.sign  
      
@@ -183,15 +183,15 @@ if __name__ == "__main__":
         a.screen.fill((0,0,0))
         player_rect_1 = player1.move(a.screen,player_1_pos_x, pos_y)
         player_rect_2 = player2.move(a.screen,player_2_pos_x, pos_y)
-        boob = ball.move()
+        box = ball.move()
         ball.collision_with_side()
-        ball.collision_with_player(boob,player_rect_1,player_rect_2, player_1_pos_x, pos_y)
+        ball.collision_with_player(box,player_rect_1,player_rect_2, player_1_pos_x, pos_y)
        
-        print m,n
+        print(m,n)
         pyg.display.update() 
         clock.tick(30)
 
-  print "Hello World"
+  print("Hello World")
 
 
 
