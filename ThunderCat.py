@@ -12,7 +12,8 @@ player_1_pos_x = 780
 player_2_pos_x = 20
 
 pos_y = 100
-
+bool_up = False
+bool_down = False
 
 class player_stick():
 
@@ -26,19 +27,13 @@ class player_stick():
   def __init__(self, screen, pos_x, width, height):
     self.width = width
     self.height = height 
-
     player = pyg.draw.rect( screen, (255,255,255), [pos_x, pos_y, self.width , self.height])
   
   def move(self, screen,pos_x, pos_y):
-    
     player = pyg.draw.rect(screen,(255,255,255), [pos_x,pos_y, self.width, self.height])
-    
     return player 
 
   
-
-
-
 class ball ():
 
   t = 0
@@ -102,21 +97,24 @@ class ball ():
     '''
      
   
-  def collision_with_pl_side():
+  def collision_with_pl_side(self):
     #Raise a point to opponent if ball collides with ends
-     
-     pass
+    # if ball.x_coordinate > WIN_WIDTH + 20 or ball.x_coordinate < :
+    #     pyg.QUIT
+    if self.t > 800 or self.t < 0:
+        print("Game should quit")
+        pyg.quit()
 
 
   def collision_with_player(self,box,player_rect_1,player_rect_2, pos_x, pos_y):
      if (box.colliderect(player_rect_2)):
         print("ITCOLLIDED!!!!!!!!!")
         self.axes_control = -self.axes_control
-        self.sign  = -self.sign
+        self.sign  = self.sign
      if (box.colliderect(player_rect_1)):
         print("ITCOLLIDED!!!!!!!!!")
         self.axes_control = -self.axes_control
-        self.sign = -self.sign  
+        self.sign = self.sign  
      
     #Check if collision has happened with players stik. if yes, same as collision_with_side
       
@@ -139,10 +137,6 @@ class create_game:
   screen = pyg.display.set_mode((800,600))
   pyg.display.set_caption('ThunderCat')
      
-
-
-
-
 
  
 clock = pyg.time.Clock()
@@ -171,78 +165,31 @@ if __name__ == "__main__":
 
                         done = True
                 if event.type == pyg.KEYDOWN:
-                        if event.key == pyg.K_LEFT:
-                               pos_x = pos_x - 10
-                        if event.key == pyg.K_RIGHT:
-                               pos_x = pos_x + 10
                         if event.key == pyg.K_UP:
-                               pos_y = pos_y - 10
+                               bool_up = True
                         if event.key == pyg.K_DOWN:
-                               pos_y  = pos_y +10
-          
+                               bool_down = True
+                elif event.type == pyg.KEYUP:
+                        if event.key == pyg.K_UP:
+                               bool_up = False
+                        if event.key == pyg.K_DOWN:
+                               bool_down = False
+        if bool_up == True:
+            pos_y -= 7
+        elif bool_down == True:
+            pos_y += 7
         a.screen.fill((0,0,0))
         player_rect_1 = player1.move(a.screen,player_1_pos_x, pos_y)
         player_rect_2 = player2.move(a.screen,player_2_pos_x, pos_y)
         box = ball.move()
         ball.collision_with_side()
         ball.collision_with_player(box,player_rect_1,player_rect_2, player_1_pos_x, pos_y)
-       
+        ball.collision_with_pl_side()
+
         print(m,n)
         pyg.display.update() 
         clock.tick(30)
 
   print("Hello World")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
