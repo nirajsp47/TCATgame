@@ -1,4 +1,3 @@
-
 import pygame as pyg
 import numpy as numpy
 import time
@@ -10,14 +9,15 @@ x = 100
 y = 100
 player_1_pos_x = 780
 player_2_pos_x = 20
+score_player_1 = 0  
+score_player_2 = 0
+
 
 pos_y = 100
 bool_up = False
 bool_down = False
 
 class player_stick():
-
-
   player = 0 
   width = 0
   height = 0
@@ -38,31 +38,34 @@ class ball ():
 
   t = 0
   q = 0
-  dir = 0 
   screen = 0
-  dir = random.randint(0,1)
-  sign = random.randint(-2,2)
-  angle = random.randint(0,300)
-  axes_control = random.randint(-5,5)  ##Find somethingwhich will either take 3.5 or -3.5 nothing in between
+  speed = [-7,7]
+  sign_list = [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  sign = random.choice(sign_list) 
+  angle = random.randint(10,550)
+  axes_control = random.choice(speed)  #Ball Speed #random.randint(-5,5)  ##Find something which will either take 3.5 or -3.5 nothing in between
   box = 0
   player_stick = 0
   pos_x = 0
   pos_y = 0
+  
   def __init__(self, screen, m, n, ball_width, ball_height):
      #self.player_stick = player_stick
+     self.reset(screen, m, n, ball_width, ball_height)
+
+  def reset(self, screen, m, n, ball_width, ball_height): 
      self.t = m
      '''self.q = n'''
-     
-     
+    
      self.screen = screen
      self.ball_height = ball_height
      self.ball_width = ball_width
      print("heloo") 
- 
+
 
   def move(self):
      #self.player_stick = player_stick 
-     
+     global score_player_1, score_player_2 
      self.angle = self.angle + self.sign
      
      #self.t = self.t + self.axes_control(+3.5 or -3.5 depends on sign)
@@ -72,6 +75,7 @@ class ball ():
      '''print self.q'''
      print(self.t)
      print(self.angle)
+     print(score_player_1, score_player_2)
      box = pyg.draw.rect(self.screen,(255,255,255), [self.t,self.angle,ball_width,ball_height])
      return box
      
@@ -101,10 +105,17 @@ class ball ():
     #Raise a point to opponent if ball collides with ends
     # if ball.x_coordinate > WIN_WIDTH + 20 or ball.x_coordinate < :
     #     pyg.QUIT
-    if self.t > 800 or self.t < 0:
-        print("Game should quit")
-        pyg.quit()
+    global score_player_1, score_player_2 
 
+    if (self.t > 800) : 
+        score_player_2 += 1
+        return True
+        
+    elif( self.t < 0) :
+        score_player_1 += 1
+        return True
+    else : 
+        return False
 
   def collision_with_player(self,box,player_rect_1,player_rect_2, pos_x, pos_y):
      if (box.colliderect(player_rect_2)):
@@ -149,10 +160,13 @@ if __name__ == "__main__":
   ball_width = 10
   ball_height = 10
   pos_x = 0
+
   a = create_game()
   player1 = player_stick(a.screen, player_1_pos_x, width, height)
   player2 = player_stick(a.screen, player_2_pos_x, width, height)
   ball = ball( a.screen, m, n, ball_width, ball_height)
+  pyg.font.init()
+  my_font = pyg.font.SysFont('Comic Sans MS', 30) 
   
   while not done:
         #pos_x = pos_x+50
@@ -184,12 +198,16 @@ if __name__ == "__main__":
         box = ball.move()
         ball.collision_with_side()
         ball.collision_with_player(box,player_rect_1,player_rect_2, player_1_pos_x, pos_y)
-        ball.collision_with_pl_side()
+        if (ball.collision_with_pl_side()) :
+            ball.reset(a.screen, m, n, ball_width, ball_height) 
 
+        text_surface1 = my_font.render("Player 1 : " + str(score_player_2), False, (255, 255, 255))
+        text_surface2 = my_font.render("Player 2 : " + str(score_player_1), False, (255, 255, 255))
+        a.screen.blit(text_surface1, (20,20)) 
+        a.screen.blit(text_surface2, (650,20)) 
         print(m,n)
         pyg.display.update() 
         clock.tick(30)
 
   print("Hello World")
-
 
